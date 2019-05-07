@@ -13,8 +13,10 @@ rtsp_path = 0
 def new_client(client, server):
     print("New client connected and was given id %d" % client['id'])
     # 发送给所有的连接
-    server.send_message_to_all("Hey all, a new client has joined us")
-
+    try:
+        server.send_message_to_all("Hey all, a new client has joined us")
+    except:
+        pass
 
 # Called for every client disconnecting
 def client_left(client, server):
@@ -63,6 +65,7 @@ def facedetect(img):
     for (x, y, w, h) in faces:
         # cv2.rectangle(image,(x,y),(x+w,y+w),(0,255,0),2)
         cv2.rectangle(img, (x, y), (x + w, y + h), (255, 0, 0), 2)
+        # cv2.imshow('',img)
     return img
 
 
@@ -82,7 +85,7 @@ def vedio_thread2(n):
 # Server Port
 PORT = 8880
 # 创建Websocket Server
-server = WebsocketServer(PORT, 'www.sustclive.top')
+server = WebsocketServer(PORT, '2001:da8:201d:1103:24a3:402a:4762:6501')
 from_vedio()
 # 有设备连接上了
 server.set_fn_new_client(new_client)
