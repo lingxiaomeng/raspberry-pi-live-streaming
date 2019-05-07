@@ -51,7 +51,7 @@ def facedetect(img):
 
 
 def RT_Image(object, client, D_addr):
-    if (check_option(object, client) == 0):
+    if check_option(object, client) == 0:
         return
     camera = cv2.VideoCapture(0)  # 从摄像头中获取视频
     img_param = [int(cv2.IMWRITE_JPEG_QUALITY), object.img_fps]  # 设置传送图像格式、帧数
@@ -75,7 +75,7 @@ def RT_Image(object, client, D_addr):
 
 if __name__ == '__main__':
     camera = Carame_Accept_Object()
-    while (1):
+    while 1:
         client, D_addr = camera.server.accept()
         clientThread = threading.Thread(None, target=RT_Image, args=(camera, client, D_addr,))
         clientThread.start()

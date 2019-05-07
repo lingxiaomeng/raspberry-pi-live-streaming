@@ -33,7 +33,7 @@ class Camera_Connect_Object:
                 try:
                     self.buf = b""  # 代表bytes类型
                     temp_buf = self.buf
-                    while (buf_size):  # 读取每一张图片的长度
+                    while buf_size:  # 读取每一张图片的长度
                         temp_buf = self.client.recv(buf_size)
                         buf_size -= len(temp_buf)
                         self.buf += temp_buf  # 获取图片
@@ -43,7 +43,7 @@ class Camera_Connect_Object:
                 except:
                     pass
                 finally:
-                    if (cv2.waitKey(10) == 27):  # 每10ms刷新一次图片，按‘ESC’（27）退出
+                    if cv2.waitKey(10) == 27:  # 每10ms刷新一次图片，按‘ESC’（27）退出
                         self.client.close()
                         cv2.destroyAllWindows()
                         break
