@@ -9,7 +9,7 @@ import numpy
 class Carame_Accept_Object:
     def __init__(self, S_addr_port=("127.0.0.1", 8880)):
         self.resolution = (640, 480)  # 分辨率
-        self.img_fps = 15  # 每秒传输多少帧数
+        self.img_fps = 30  # 每秒传输多少帧数
         self.addr_port = S_addr_port
         self.Set_Socket(self.addr_port)
 
@@ -37,6 +37,19 @@ def check_option(object, client):
         return 0
 
 
+def facedetect(img):
+    detector = cv2.CascadeClassifier('eyedetect.xml')
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    faces = detector.detectMultiScale(gray, 1.3, 5)
+    if len(faces) >= 1:
+        print("发现{0}个人脸!".format(len(faces)))
+
+    for (x, y, w, h) in faces:
+        # cv2.rectangle(image,(x,y),(x+w,y+w),(0,255,0),2)
+        cv2.rectangle(img, (x, y), (x + w, y + h), (255, 0, 0), 2)
+    return img
+
+
 def RT_Image(object, client, D_addr):
     if (check_option(object, client) == 0):
         return
@@ -45,8 +58,9 @@ def RT_Image(object, client, D_addr):
     while (1):
         time.sleep(0.1)  # 推迟线程运行0.1s
         _, object.img = camera.read()  # 读取视频每一帧
-
+        object.img = facedetect(object.img)
         object.img = cv2.resize(object.img, object.resolution)  # 按要求调整图像大小(resolution必须为元组)
+
         _, img_encode = cv2.imencode('.jpg', object.img, img_param)  # 按格式生成图片
         img_code = numpy.array(img_encode)  # 转换成矩阵
         object.img_data = img_code.tostring()  # 生成相应的字符串
